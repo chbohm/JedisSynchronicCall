@@ -1,0 +1,22 @@
+<FindBugsFilter>
+	<!-- filter out test and perf classes -->
+	<Match>
+		<Package name="~.*\.test" />
+	</Match>
+	<Match>
+		<Class name="~.*\.*Test" />
+	</Match>
+	<Match>
+		<Class name="~.*\.*TestCase" />
+	</Match>
+	<Match>
+		<Class name="~.*\.*Perf" />
+	</Match>
+	<Match>
+        <Package name="com.axioma.dataaccess.dto" />
+    </Match>
+    <Match>
+        <Package name="com.axioma.dataaccess.key" />
+    </Match>
+</FindBugsFilter>
+

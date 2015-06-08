@@ -1,0 +1,21 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: AdminCore
+Bundle-SymbolicName: com.axioma.admin.core;singleton:=true
+Bundle-Version: 2015.2.0.SNAPSHOT
+Bundle-Activator: com.axioma.admin.core.AdminCoreBundle
+Require-Bundle: 
+ org.eclipse.core.runtime;bundle-version="3.8.0",
+ org.eclipse.ui;bundle-version="3.8.0",
+ com.axioma.guiutil.core;bundle-version="2015.2.0.SNAPSHOT",
+ org.mockito.mockito-core;bundle-version="1.9.5",
+ org.objenesis;bundle-version="1.2.0"
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-Vendor: Axioma Inc.
+Export-Package: com.axioma.admin.core,
+ com.axioma.admin.core.editor,
+ com.axioma.admin.core.i18n,
+ com.axioma.admin.core.model,
+ com.axioma.admin.core.presenter,
+ com.axioma.admin.core.util

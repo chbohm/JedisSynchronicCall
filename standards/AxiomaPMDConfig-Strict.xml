@@ -1,0 +1,112 @@
+<?xml version="1.0"?>
+<ruleset name="AxiomaPMDConfig-Strict" xmlns="http://pmd.sf.net/ruleset/1.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://pmd.sf.net/ruleset/1.0.0 http://pmd.sf.net/ruleset_xml_schema.xsd"
+	xsi:noNamespaceSchemaLocation="http://pmd.sf.net/ruleset_xml_schema.xsd">
+
+	<description>
+    Axioma PMD rules strict/comprehensive/whatever
+  </description>
+
+	<!--
+		TODO need to investigate these, don't seem to have an effect currently
+	-->
+	<!--
+		<exclude-pattern>**/*Test.*</exclude-pattern>
+		<exclude-pattern>**/*TestCase.*</exclude-pattern>
+	-->
+
+	<!-- We'll use the entire 'strings' ruleset -->
+	<rule ref="rulesets/java/basic.xml">
+	  <!-- Exclude until PMD is fixed to handle try-with-resources -->
+	  <exclude name="CheckResultSet"/>
+	  <exclude name="AvoidBranchingStatementAsLastInLoop" />
+	</rule>
+	<rule ref="rulesets/java/braces.xml" />
+	<rule ref="rulesets/java/clone.xml" />
+	<!--
+		code size is out for now, want to tweak some of the rules, rather than
+		exclude - and that means individualize the rules
+	-->
+	<!-- <rule ref="rulesets/java/codesize.xml"/>-->
+	<rule ref="rulesets/java/controversial.xml">
+		<exclude name="UnnecessaryConstructor" />
+		<exclude name="NullAssignment" />
+		<exclude name="OnlyOneReturn" />
+		<exclude name="UnusedModifier" />
+		<exclude name="UnnecessaryConstructor" />
+		<exclude name="AtLeastOneConstructor" />
+		<exclude name="UnnecessaryParentheses" />
+		<exclude name="BooleanInversion" />
+		<exclude name="DataflowAnomalyAnalysis" />
+		<exclude name="AvoidFinalLocalVariable" />
+		<exclude name="BooleanInversion" />
+		<exclude name="AvoidUsingNativeCode" />
+		<exclude name="DoNotCallGarbageCollectionExplicitly" />
+		<exclude name="DefaultPackage" />
+		<exclude name="UseConcurrentHashMap" />
+		<exclude name="AvoidLiteralsInIfCondition" />
+		<exclude name="AvoidPrefixingMethodParameters" />
+		<exclude name="UseObjectForClearerAPI" />
+		<exclude name="AssignmentInOperand" />
+	</rule>
+	<rule ref="rulesets/java/coupling.xml">
+		<exclude name="ExcessiveImports" />       
+		<exclude name="CouplingBetweenObjects" />
+		<exclude name="LawOfDemeter" />
+	</rule>	
+	<rule ref="rulesets/java/design.xml">
+		<exclude name="MissingStaticMethodInNonInstantiatableClass" />
+		<exclude name="UseSingleton" />
+		<exclude name="UseLocaleWithCaseConversions" />
+	   <exclude name="ConfusingTernary" />
+	   <exclude name="GodClass" />
+	   <exclude name="FieldDeclarationsShouldBeAtStartOfClass" />
+	   <exclude name="LogicInversion" />
+	   <exclude name="CloseResource" />
+	   <exclude name="UseNotifyAllInsteadOfNotify" />
+	   <exclude name="UncommentedEmptyMethod" />
+	   <exclude name="ConstructorCallsOverridableMethod" />
+	   <exclude name="UseCollectionIsEmpty" />	   
+	</rule>
+	<rule ref="rulesets/java/finalizers.xml" />
+	<rule ref="rulesets/java/imports.xml">
+	    <exclude name="TooManyStaticImports" />
+	    <exclude name="UnnecessaryFullyQualifiedName" />
+	</rule>
+	<rule ref="rulesets/java/junit.xml" />
+	<rule ref="rulesets/java/naming.xml">
+		<exclude name="ShortVariable" />
+		<exclude name="LongVariable" />
+		<exclude name="VariableNamingConventions" />
+		<exclude name="ShortClassName" />
+	</rule>
+	<rule ref="rulesets/java/optimizations.xml">
+		<exclude name="LocalVariableCouldBeFinal" />
+		<exclude name="AvoidInstantiatingObjectsInLoops" />
+		<exclude name="UseStringBufferForStringAppends" />
+		<exclude name="PrematureDeclaration" />
+		<exclude name="RedundantFieldInitializer" />
+	</rule>
+	<rule ref="rulesets/java/strictexception.xml" />
+	<rule ref="rulesets/java/strings.xml" >
+		<exclude name="InsufficientStringBufferDeclaration" />
+		<exclude name="AppendCharacterWithChar" />
+		<exclude name="ConsecutiveLiteralAppends" />
+		<exclude name="InefficientStringBuffering" />
+		<exclude name="AvoidStringBufferField" />
+		<exclude name="AvoidDuplicateLiterals" />
+		<exclude name="ConsecutiveAppendsShouldReuse" />
+		
+	</rule>
+	<rule ref="rulesets/java/typeresolution.xml" />
+	<!--
+		can't find this, but it's in PMD source? <rule
+		ref="rulesets/unnecessary.xml"/>
+	-->
+	<!--
+		can't find this, but it's in PMD source? <rule
+		ref="rulesets/unused.xml"/>
+	-->
+
+</ruleset>

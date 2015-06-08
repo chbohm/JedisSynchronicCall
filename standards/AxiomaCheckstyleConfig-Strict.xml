@@ -1,0 +1,206 @@
+<?xml version="1.0"?>
+<!DOCTYPE module PUBLIC
+    "-//Puppy Crawl//DTD Check Configuration 1.2//EN"
+    "http://www.puppycrawl.com/dtds/configuration_1_2.dtd">
+
+    <!--
+
+        Checkstyle configuration that checks the sun coding conventions from:
+
+        - the Java Language Specification at
+        http://java.sun.com/docs/books/jls/second_edition/html/index.html -
+        the Sun Code Conventions at http://java.sun.com/docs/codeconv/ - the
+        Javadoc guidelines at
+        http://java.sun.com/j2se/javadoc/writingdoccomments/index.html - the
+        JDK Api documentation http://java.sun.com/j2se/docs/api/index.html -
+        some best practices Checkstyle is very configurable. Be sure to read
+        the documentation at http://checkstyle.sf.net (or in your downloaded
+        distribution). Most Checks are configurable, be sure to consult the
+        documentation. To completely disable a check, just comment it out or
+        delete it from the file. Finally, it is worth reading the
+        documentation.
+    -->
+
+<module name="Checker">
+
+    <module name="SuppressionCommentFilter"/> 
+    
+    <module name="FileLength" /> 
+    
+    <module name="FileTabCharacter" />  
+
+    <module name="TreeWalker">
+    
+       <property name="cacheFile" value="${checkstyle.cache.file}"/>
+       <!--  required so that comments are included, and SuppressionCommentFilter then works -->
+       <module name="FileContentsHolder"/>     
+
+        <!-- Checks for Javadoc comments.                     -->
+        <!-- See http://checkstyle.sf.net/config_javadoc.html -->
+        <module name="JavadocType">
+            <property name="excludeScope" value="private" />
+        </module>
+        <module name="JavadocMethod">
+            <property name="excludeScope" value="private" />
+        </module>
+        <module name="JavadocVariable">
+            <property name="excludeScope" value="private" />
+        </module>
+        <module name="JavadocStyle">
+            <property name="excludeScope" value="private" />
+        </module>
+
+        <!-- Checks for Naming Conventions.                  -->
+        <!-- See http://checkstyle.sf.net/config_naming.html -->
+        <module name="AbstractClassName">
+	  <property name="format" value="^Abstract.*$"/>
+	</module>
+        <module name="ConstantName" />
+        <module name="LocalFinalVariableName" />
+        <module name="LocalVariableName" />
+        <module name="MemberName">
+            <property name="format" value="^[a-z_][a-zA-Z0-9_]*$"/>
+        </module>
+        <module name="MethodName" />
+        <module name="PackageName" />
+        <module name="ParameterName" />
+        <module name="StaticVariableName" />
+        <module name="TypeName" />
+
+        <!-- Checks for imports                              -->
+        <!-- See http://checkstyle.sf.net/config_import.html -->
+        <module name="AvoidStarImport" />
+        <module name="IllegalImport" /> <!-- defaults to sun.* packages -->
+        <module name="RedundantImport" />
+        <module name="UnusedImports" />
+
+        <!-- Checks for Size Violations.                    -->
+        <!-- See http://checkstyle.sf.net/config_sizes.html -->
+        <module name="ExecutableStatementCount">
+            <property name="max" value="40" />
+        </module>       
+        <module name="LineLength">
+            <property name="max" value="140" />
+        </module>
+        <module name="MethodLength" />
+        <module name="AnonInnerLength" />
+        <!--  Because we often use dependency injection, large number of params is not bad -->
+        <module name="ParameterNumber">
+          <property name="max" value="15" />
+        </module>
+
+        <!-- Checks for whitespace                               -->
+        <!-- See http://checkstyle.sf.net/config_whitespace.html -->
+        <module name="EmptyForInitializerPad" />
+        <module name="EmptyForIteratorPad" />
+        <module name="MethodParamPad" />
+        <module name="NoWhitespaceAfter">
+          <property name="tokens" value="BNOT, DEC, DOT, INC, LNOT, UNARY_MINUS, UNARY_PLUS"/>        
+        </module>
+        <module name="NoWhitespaceBefore" />
+        <module name="OperatorWrap" />
+        <module name="ParenPad" />
+        <module name="TypecastParenPad" />      
+        <module name="WhitespaceAfter" />
+
+        <!-- Modifier Checks                                    -->
+        <!-- See http://checkstyle.sf.net/config_modifiers.html -->
+        <module name="ModifierOrder" />
+
+        <!-- Checks for blocks. You know, those {}'s         -->
+        <!-- See http://checkstyle.sf.net/config_blocks.html -->
+        <module name="EmptyBlock" />
+        <module name="LeftCurly" />
+        <module name="NeedBraces" />
+        <module name="RightCurly" />
+        <module name="AvoidNestedBlocks" />
+
+        <!-- Checks for common coding problems               -->
+        <!-- See http://checkstyle.sf.net/config_coding.html -->
+        <module name="CovariantEquals" />
+        <module name="EmptyStatement" />
+        <module name="EqualsHashCode" />
+        <module name="IllegalInstantiation" />
+        <module name="IllegalTokenText" />
+        <module name="InnerAssignment" />
+        <module name="MissingSwitchDefault" />
+        <module name="ModifiedControlVariable" />
+        <module name="RedundantThrows" />
+        <module name="SimplifyBooleanExpression" />
+        <module name="SimplifyBooleanReturn" />
+        <module name="StringLiteralEquality" />
+        <module name="NestedIfDepth">
+            <property name="max" value="3" />
+        </module>
+        <module name="NestedTryDepth">
+            <property name="max" value="3" />
+	</module>
+        <module name="SuperClone" />
+        <module name="SuperFinalize" />
+        <module name="IllegalCatch" />
+        <module name="IllegalThrows" />
+        <module name="PackageDeclaration" />
+        <module name="ReturnCount" >
+          <property name="max" value="3" />
+        </module>
+        <module name="IllegalType" >
+            <!-- In general, we should use interfaces for types. We allow certain abstract class names to be used as types, where having separate interface do not make sense -->
+            <property name="legalAbstractClassNames" value="AbstractPortfolio, AbstractReportTemplate, AbstractTimeSeriesObject, AbstractRMMCommandParameters, AbstractAttribute"/>
+        </module>
+        <module name="DeclarationOrder" />
+        <module name="ParameterAssignment" />
+        <module name="DefaultComesLast" />
+
+        <module name="FallThrough" />
+        <module name="MultipleVariableDeclarations" />
+        <module name="RequireThis" />
+        <module name="UnnecessaryParentheses" />
+
+        <!-- Checks for class design                         -->
+        <!-- See http://checkstyle.sf.net/config_design.html -->
+        <module name="VisibilityModifier">
+            <property name="packageAllowed" value="true" />
+            <property name="protectedAllowed" value="true" />
+        </module>
+
+        <module name="FinalClass" />
+        <module name="InterfaceIsType" />
+        <module name="HideUtilityClassConstructor" />
+        <module name="MutableException" />
+        <module name="ThrowsCount">
+            <property name="max" value="3" />
+        </module>
+
+
+        <!-- Metrics                                       -->
+        <!-- See http://checkstyle.sf.net/config_metrics.html -->
+        <module name="BooleanExpressionComplexity" />
+        <module name="ClassDataAbstractionCoupling">
+            <property name="max" value="20" />  <!-- ASD Just find things that are really extreme.  -->
+        </module>
+
+        <module name="ClassFanOutComplexity">
+            <property name="max" value="40" />  <!-- ASD Just find things that are really extreme.  -->
+        </module>
+
+        <module name="CyclomaticComplexity" />
+        <module name="NPathComplexity" />
+        <module name="JavaNCSS" />
+
+        <!-- Miscellaneous other checks.                   -->
+        <!-- See http://checkstyle.sf.net/config_misc.html -->
+        <module name="TodoComment">
+            <property name="format" value="WARNING" />
+        </module>
+        
+        <module name="UpperEll" />
+        <module name="ArrayTypeStyle" />
+        <module name="FinalParameters" />
+        <module name="Indentation">
+            <property name="basicOffset" value="3" />
+            <property name="caseIndent" value="3" />
+        </module>
+
+    </module>
+
+</module>
