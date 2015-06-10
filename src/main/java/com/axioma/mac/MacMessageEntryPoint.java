@@ -3,11 +3,11 @@ package com.axioma.mac;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import redis.clients.jedis.JedisPubSub;
-
 import com.axioma.mac.worker.IntegerToStringWorker;
-import com.axioma.redis.MessageLogger;
+import com.axioma.redis.JSONMessageMatcher;
+import com.axioma.redis.MessageCallback;
 import com.axioma.redis.RedisHandler;
+import com.axioma.redis.ThreadService;
 
 public class MacMessageEntryPoint {
 
@@ -15,8 +15,15 @@ public class MacMessageEntryPoint {
 
    public MacMessageEntryPoint() {
       super();
-      TaskRequestMessageSubscriber subs = new TaskRequestMessageSubscriber();
-      RedisHandler.getInstance().subscribe(subs, CHANNEL_ENTRY_POINT);
+      TaskRequestMessageCallback subs = new TaskRequestMessageCallback();
+      JSONMessageMatcher matcher = new JSONMessageMatcher() {
+         @Override
+         protected boolean matches(final String channel, final JSONObject obj) {
+            return CHANNEL_ENTRY_POINT.equals(channel) && obj.has("command");
+         }
+      };
+
+      RedisHandler.getInstance().registerCallback(matcher, new TaskRequestMessageCallback());
       System.out.println("MAC listening requests in channel: " + CHANNEL_ENTRY_POINT);
    }
 
@@ -24,29 +31,26 @@ public class MacMessageEntryPoint {
       new MacMessageEntryPoint();
    }
 
-   private static class TaskRequestMessageSubscriber extends JedisPubSub {
+   private static class TaskRequestMessageCallback implements MessageCallback {
 
       @Override
-      public void onMessage(final String channel, final String message) {
-         JSONObject json = new JSONObject(message);
-         if (!json.has("command")) {
-            return;
-         }
-         MessageLogger.logMessageReceived("MAC Entry Point", channel, message);
+      public void onMessage(final JSONObject resultJson) {
 
          try {
-            String command = json.getString("command");
-            String resultChannel = json.getString("resultChannel");
-            Runnable processor = () -> System.out.println("Message skipped. No processor found for this message");
+            String command = resultJson.getString("command");
+            String resultChannel = resultJson.getString("resultChannel");
+            Runnable processor = () -> {
+            };
 
             if (command.equals("integerToString")) {
-               processor = new IntegerToStringWorker(resultChannel, json);
+               processor = new IntegerToStringWorker(resultChannel, resultJson);
             }
-            Thread processingThread = new Thread(processor);
-            processingThread.start();
+
+            ThreadService.getService().submit(processor);
          } catch (JSONException e) {
             System.out.println("Message skipped: " + e.getMessage());
          }
+
       }
    }
 }

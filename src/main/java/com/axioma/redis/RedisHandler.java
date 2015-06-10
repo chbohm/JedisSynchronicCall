@@ -3,19 +3,29 @@ package com.axioma.redis;
 import java.util.concurrent.CountDownLatch;
 
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.JedisPoolConfig;
 import redis.clients.jedis.JedisPubSub;
 import redis.clients.jedis.exceptions.JedisConnectionException;
 import redis.clients.jedis.exceptions.JedisException;
 
 public class RedisHandler {
 
+   public static final String CHANNEL = "RequestChannel";
+
    private final Jedis publisher;
    private final String redisServerURL = "hrsuat.hexacta.com";
+
+   private final JedisPoolConfig poolConfig = new JedisPoolConfig();
+   private final JedisPool jedisPool = new JedisPool(this.poolConfig, this.redisServerURL, 6379, 0);
+   private final Jedis subscriber;
+   private final MyPubSub pubSub = new MyPubSub();
 
    private static RedisHandler PUBLISHER;
 
    public RedisHandler() {
-      this.publisher = new Jedis(this.redisServerURL);
+      this.publisher = this.jedisPool.getResource();
+      this.subscriber = this.subscribe();
    }
 
    public static RedisHandler getInstance() {
@@ -27,7 +37,6 @@ public class RedisHandler {
 
    public void publish(final String channel, final String message) {
       try {
-         //         System.out.println("Publishing into channel: " + channel + ". Message: " + message);
          this.publisher.publish(channel, message);
       } catch (JedisConnectionException e) {
          System.out.println(e.getMessage());
@@ -41,13 +50,17 @@ public class RedisHandler {
       }
    }
 
-   public synchronized void subscribe(final JedisPubSub subs, final String channel) {
-      String threadName = "ChannelListener: " + channel;
+   public void registerCallback(final MessageMatcher matcher, final MessageCallback callback) {
+      this.pubSub.registerCallBack(matcher, callback);
+   }
+
+   private Jedis subscribe() {
+      Jedis subscriber = this.jedisPool.getResource();
+      String threadName = "ChannelListener: " + CHANNEL;
       CountDownLatch latch = new CountDownLatch(1);
       Thread t = new Thread(() -> {
          latch.countDown();
-         Jedis subscriber = new Jedis(this.redisServerURL);
-         subscriber.subscribe(subs, channel);
+         subscriber.subscribe(this.pubSub, CHANNEL);
       }, threadName);
       t.start();
       try {
@@ -55,10 +68,12 @@ public class RedisHandler {
       } catch (InterruptedException e) {
          e.printStackTrace();
       }
+
+      return subscriber;
    }
 
    public synchronized void unsubscribe(final JedisPubSub subs) {
-      subs.unsubscribe();
+      //      subs.unsubscribe();
    }
 
    private void reconnect() {

@@ -3,11 +3,11 @@ package com.axioma.eros;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import redis.clients.jedis.JedisPubSub;
-
 import com.axioma.eros.worker.ConcatWorker;
-import com.axioma.redis.MessageLogger;
+import com.axioma.redis.JSONMessageMatcher;
+import com.axioma.redis.MessageCallback;
 import com.axioma.redis.RedisHandler;
+import com.axioma.redis.ThreadService;
 
 public class ErosMessageEntryPoint {
 
@@ -15,8 +15,15 @@ public class ErosMessageEntryPoint {
 
    public ErosMessageEntryPoint() {
       super();
-      TaskRequestMessageSubscriber subs = new TaskRequestMessageSubscriber();
-      RedisHandler.getInstance().subscribe(subs, CHANNEL_ENTRY_POINT);
+      TaskRequestMessageCallback subs = new TaskRequestMessageCallback();
+      JSONMessageMatcher matcher = new JSONMessageMatcher() {
+         @Override
+         protected boolean matches(final String channel, final JSONObject obj) {
+            return CHANNEL_ENTRY_POINT.equals(channel) && obj.has("command");
+         }
+      };
+
+      RedisHandler.getInstance().registerCallback(matcher, new TaskRequestMessageCallback());
       System.out.println("Eros listening requests in channel: " + CHANNEL_ENTRY_POINT);
    }
 
@@ -24,25 +31,25 @@ public class ErosMessageEntryPoint {
       new ErosMessageEntryPoint();
    }
 
-   private static class TaskRequestMessageSubscriber extends JedisPubSub {
+   private static class TaskRequestMessageCallback implements MessageCallback {
 
       @Override
-      public void onMessage(final String channel, final String message) {
-         MessageLogger.logMessageReceived("Eros Entry Point", channel, message);
-         JSONObject json = new JSONObject(message);
+      public void onMessage(final JSONObject json) {
+
          try {
             String command = json.getString("command");
             String resultChannel = json.getString("resultChannel");
-            Runnable processor = () -> System.out.println("Message skipped. No processor found for this message");
+            Runnable processor = () -> {};
 
             if (command.equals("concat")) {
                processor = new ConcatWorker(resultChannel, json);
             }
-            Thread processingThread = new Thread(processor);
-            processingThread.start();
+            ThreadService.getService().submit(processor);
          } catch (JSONException e) {
             System.out.println("Message skipped: " + e.getMessage());
          }
+
       }
    }
+
 }

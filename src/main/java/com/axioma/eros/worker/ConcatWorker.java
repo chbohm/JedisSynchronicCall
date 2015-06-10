@@ -42,7 +42,6 @@ public class ConcatWorker implements Runnable {
       message.put("result", result);
       message.put("messageId", this.messageId);
       RedisHandler.getInstance().publish(this.resultChannel, message.toString());
-      System.out.println("Publishing result: " + message.toString());
    }
 
 }
