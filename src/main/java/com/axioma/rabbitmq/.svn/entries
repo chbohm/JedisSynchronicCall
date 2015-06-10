@@ -1,0 +1,84 @@
+10
+
+dir
+0
+https://subversion.axiomainc.com/svn/Eros/Prototypes/NodeJs-Redis-Java/JavaRedisServer/src/main/java/com/axioma/rabbitmq
+https://subversion.axiomainc.com/svn
+add
+
+
+
+
+
+has-props
+has-prop-mods
+
+
+
+
+
+
+
+
+
+
+
+
+adc87404-78bd-0310-adf1-a000a882e4a4
+
+RabbitMQHandler.java
+file
+
+
+
+add
+
+TaskRequirementConsumer.java
+file
+
+
+
+add
+
+Starter.java
+file
+
+
+
+add
+
+ResultsProducer.java
+file
+
+
+
+add
+
+StatusProducer.java
+file
+
+
+
+add
+
+TaskRequirementProducer.java
+file
+
+
+
+add
+
+QueueNames.java
+file
+
+
+
+add
+
+Job.java
+file
+
+
+
+add
+

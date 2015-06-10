@@ -13,11 +13,13 @@ public class ConcatWorker implements Runnable {
 
    private final String resultChannel;
    private final List<String> strToConcat;
+   private final String messageId;
 
    public ConcatWorker(final String resultChannel, final JSONObject json) {
       super();
       this.resultChannel = resultChannel;
       this.strToConcat = this.getStrToConcat(json);
+      this.messageId = json.getString("messageId");
    }
 
    private List<String> getStrToConcat(final JSONObject json) {
@@ -37,8 +39,10 @@ public class ConcatWorker implements Runnable {
 
    private void sendResult(final String result) {
       JSONObject message = new JSONObject();
-      message.accumulate("result", result);
+      message.put("result", result);
+      message.put("messageId", this.messageId);
       RedisHandler.getInstance().publish(this.resultChannel, message.toString());
+      System.out.println("Publishing result: " + message.toString());
    }
 
 }

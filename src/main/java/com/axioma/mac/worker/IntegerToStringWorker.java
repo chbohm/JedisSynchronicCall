@@ -5,7 +5,7 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import com.axioma.mac.erosconnector.ErosConnectorImpl;
+import com.axioma.mac.erosconnector.ErosConnectorRedisSynchronicImpl;
 import com.axioma.redis.RedisHandler;
 import com.google.common.collect.Lists;
 
@@ -13,11 +13,13 @@ public class IntegerToStringWorker implements Runnable {
 
    private final List<Integer> numbers;
    private final String resultChannel;
+   private final String messageId;
 
    public IntegerToStringWorker(final String resultChannel, final JSONObject json) {
       super();
       this.numbers = this.getNumbers(json);
       this.resultChannel = resultChannel;
+      this.messageId = json.getString("messageId");
    }
 
    private List<Integer> getNumbers(final JSONObject json) {
@@ -68,14 +70,15 @@ public class IntegerToStringWorker implements Runnable {
          }
          strNumebrs.add(str);
       }
-      ErosConnectorImpl impl = new ErosConnectorImpl();
+      ErosConnectorRedisSynchronicImpl impl = new ErosConnectorRedisSynchronicImpl();
       String result = impl.concat(strNumebrs);
       this.sendResult(result);
    }
 
    private void sendResult(final String result) {
       JSONObject message = new JSONObject();
-      message.accumulate("result", result);
+      message.put("result", result);
+      message.put("messageId", this.messageId);
       RedisHandler.getInstance().publish(this.resultChannel, message.toString());
    }
 

@@ -28,14 +28,12 @@ public class MacMessageEntryPoint {
 
       @Override
       public void onMessage(final String channel, final String message) {
-
-         MessageLogger.logMessageReceived("MAC Entry Point", channel, message);
-
-         if (!CHANNEL_ENTRY_POINT.equals(channel)) {
-            System.out.println("Received message from another channel: " + channel + ". Message skipped");
+         JSONObject json = new JSONObject(message);
+         if (!json.has("command")) {
             return;
          }
-         JSONObject json = new JSONObject(message);
+         MessageLogger.logMessageReceived("MAC Entry Point", channel, message);
+
          try {
             String command = json.getString("command");
             String resultChannel = json.getString("resultChannel");

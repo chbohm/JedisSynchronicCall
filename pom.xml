@@ -2,11 +2,11 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.axioma</groupId>
-	<artifactId>RabbitProducerConsumer</artifactId>
+	<artifactId>JavaRedisSever</artifactId>
 	<packaging>jar</packaging>
 	<version>2015.2-SNAPSHOT</version>
-	<name>RabbitProducerConsumer</name>
-	<description>RabbitProducerConsumer</description>
+	<name>JavaRedisSever</name>
+	<description>JavaRedisSever</description>
 
 	<dependencies>
 		<dependency>

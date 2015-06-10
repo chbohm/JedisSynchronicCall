@@ -1,6 +1,5 @@
 package com.axioma.redis;
 
-import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
 import redis.clients.jedis.Jedis;
@@ -8,17 +7,15 @@ import redis.clients.jedis.JedisPubSub;
 import redis.clients.jedis.exceptions.JedisConnectionException;
 import redis.clients.jedis.exceptions.JedisException;
 
-import com.google.common.collect.Maps;
-
 public class RedisHandler {
 
    private final Jedis publisher;
+   private final String redisServerURL = "hrsuat.hexacta.com";
 
    private static RedisHandler PUBLISHER;
-   public Map<JedisPubSub, Jedis> subscriberMap = Maps.newHashMap();
 
    public RedisHandler() {
-      this.publisher = new Jedis("redis.hexacta.com");
+      this.publisher = new Jedis(this.redisServerURL);
    }
 
    public static RedisHandler getInstance() {
@@ -30,11 +27,11 @@ public class RedisHandler {
 
    public void publish(final String channel, final String message) {
       try {
-         System.out.println("Publishing into channel: " + channel + ". Message: " + message);
+         //         System.out.println("Publishing into channel: " + channel + ". Message: " + message);
          this.publisher.publish(channel, message);
       } catch (JedisConnectionException e) {
          System.out.println(e.getMessage());
-         System.out.println("Reconnecting to REDIS server and trying again.");
+         System.out.println("Reconnecting to REDIS server " + this.redisServerURL + " and trying again.");
          this.reconnect();
          this.publish(channel, message);
       } catch (JedisException e) {
@@ -49,9 +46,7 @@ public class RedisHandler {
       CountDownLatch latch = new CountDownLatch(1);
       Thread t = new Thread(() -> {
          latch.countDown();
-         System.out.println(threadName);
-         Jedis subscriber = new Jedis("redis.hexacta.com");
-         this.subscriberMap.put(subs, subscriber);
+         Jedis subscriber = new Jedis(this.redisServerURL);
          subscriber.subscribe(subs, channel);
       }, threadName);
       t.start();
@@ -61,7 +56,7 @@ public class RedisHandler {
          e.printStackTrace();
       }
    }
-   
+
    public synchronized void unsubscribe(final JedisPubSub subs) {
       subs.unsubscribe();
    }
