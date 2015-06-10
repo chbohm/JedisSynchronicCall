@@ -11,21 +11,20 @@ import redis.clients.jedis.exceptions.JedisException;
 
 public class RedisHandler {
 
-   public static final String CHANNEL = "RequestChannel";
+   public static final String CHANNEL = Constants.Channels.TASK_REQUEST;
 
    private final Jedis publisher;
    private final String redisServerURL = "hrsuat.hexacta.com";
 
    private final JedisPoolConfig poolConfig = new JedisPoolConfig();
    private final JedisPool jedisPool = new JedisPool(this.poolConfig, this.redisServerURL, 6379, 0);
-   private final Jedis subscriber;
    private final MyPubSub pubSub = new MyPubSub();
 
    private static RedisHandler PUBLISHER;
 
    public RedisHandler() {
       this.publisher = this.jedisPool.getResource();
-      this.subscriber = this.subscribe();
+      this.subscribe();
    }
 
    public static RedisHandler getInstance() {
