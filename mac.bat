@@ -1,0 +1,1 @@
+start mvn exec:java -Dexec.mainClass="com.axioma.mac.MacMessageEntryPoint" -Dexec.args="d:/mac.log"

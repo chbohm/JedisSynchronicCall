@@ -15,6 +15,7 @@ public class MacAPI {
          message.append("data", n);
       }
       JSONObject result = RedisSynchronicCall.call(ErosMessageEntryPoint.CHANNEL_ENTRY_POINT, message);
+      System.out.println(result);
       return result == null ? "" : result.getString("result");
    }
 

@@ -14,7 +14,8 @@ public class RedisHandler {
    public static final String CHANNEL = Constants.Channels.TASK_REQUEST;
 
    private final Jedis publisher;
-   private final String redisServerURL = "hrsuat.hexacta.com";
+   private final String redisServerURL = "hxpws-zojeda.hexacta.com";
+//   private final String redisServerURL = "hrsuat.hexacta.com";
 
    private final JedisPoolConfig poolConfig = new JedisPoolConfig();
    private final JedisPool jedisPool = new JedisPool(this.poolConfig, this.redisServerURL, 6379, 0);
@@ -24,6 +25,8 @@ public class RedisHandler {
 
    public RedisHandler() {
       this.publisher = this.jedisPool.getResource();
+      this.publisher.append("name", "christian");
+      System.out.println(this.publisher.get("name"));
       this.subscribe();
    }
 

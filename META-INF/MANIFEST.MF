@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: AdminCore
-Bundle-SymbolicName: com.axioma.admin.core;singleton:=true
+Bundle-SymbolicName: com.axioma.javaredisserver;singleton:=true
 Bundle-Version: 2015.2.0.SNAPSHOT
 Bundle-Activator: com.axioma.admin.core.AdminCoreBundle
 Require-Bundle: 

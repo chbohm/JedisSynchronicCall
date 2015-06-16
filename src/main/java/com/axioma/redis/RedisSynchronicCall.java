@@ -21,7 +21,7 @@ public class RedisSynchronicCall {
          public synchronized JSONObject call() throws Exception {
             String requestId = System.nanoTime() + " " + random.nextInt();
             requestMessage.put("resultChannel", serviceChannel);
-            requestMessage.put("messageId", requestId);
+            requestMessage.put("requestId", requestId);
 
             MutableObject<JSONObject> result = new MutableObject<>();
             Callable<JSONObject> self = this;
@@ -30,7 +30,7 @@ public class RedisSynchronicCall {
                @Override
                protected boolean matches(final String channel, final JSONObject obj) {
                   boolean matches =
-                           channel.equals(serviceChannel) && obj.getString("messageId").equals(requestId) && obj.has("result");
+                           channel.equals(serviceChannel) && obj.getString("requestId").equals(requestId) && obj.has("result");
                   return matches;
                }
             };

@@ -1,0 +1,1 @@
+start mvn exec:java -Dexec.mainClass="com.axioma.eros.ErosMessageEntryPoint" -Dexec.args="d:/eros.log"

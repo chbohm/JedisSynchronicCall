@@ -3,7 +3,9 @@ package com.axioma.mac;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.axioma.log.Logger;
 import com.axioma.mac.worker.IntegerToStringWorker;
+import com.axioma.redis.Constants;
 import com.axioma.redis.JSONMessageMatcher;
 import com.axioma.redis.MessageCallback;
 import com.axioma.redis.RedisHandler;
@@ -11,7 +13,7 @@ import com.axioma.redis.ThreadService;
 
 public class MacMessageEntryPoint {
 
-   public static final String CHANNEL_ENTRY_POINT = "RequestChannel";
+   public static final String CHANNEL_ENTRY_POINT = Constants.Channels.TASK_REQUEST;
 
    public MacMessageEntryPoint() {
       super();
@@ -28,6 +30,12 @@ public class MacMessageEntryPoint {
    }
 
    public static void main(final String[] args) {
+      Logger log = Logger.getInstance();
+      log.init(args[0]);
+      Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+         log.close();
+      }));
+
       new MacMessageEntryPoint();
    }
 

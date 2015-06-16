@@ -5,6 +5,7 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.axioma.log.Logger;
 import com.axioma.mac.erosconnector.ErosConnectorRedisSynchronicImpl;
 import com.axioma.redis.RedisHandler;
 import com.google.common.collect.Lists;
@@ -13,13 +14,13 @@ public class IntegerToStringWorker implements Runnable {
 
    private final List<Integer> numbers;
    private final String resultChannel;
-   private final String messageId;
+   private final String requestId;
 
    public IntegerToStringWorker(final String resultChannel, final JSONObject json) {
       super();
       this.numbers = this.getNumbers(json);
       this.resultChannel = resultChannel;
-      this.messageId = json.getString("messageId");
+      this.requestId = json.getString("requestId");
    }
 
    private List<Integer> getNumbers(final JSONObject json) {
@@ -33,6 +34,7 @@ public class IntegerToStringWorker implements Runnable {
 
    @Override
    public void run() {
+      Logger.getInstance().log("IntegerToStringWorker", "start", this.requestId, "PROCESSING");
       List<String> strNumebrs = Lists.newArrayList();
       for (Integer n : this.numbers) {
          String str = "";
@@ -73,12 +75,13 @@ public class IntegerToStringWorker implements Runnable {
       ErosConnectorRedisSynchronicImpl impl = new ErosConnectorRedisSynchronicImpl();
       String result = impl.concat(strNumebrs);
       this.sendResult(result);
+      Logger.getInstance().log("IntegerToStringWorker", "end", this.requestId, "PROCESSING");
    }
 
    private void sendResult(final String result) {
       JSONObject message = new JSONObject();
       message.put("result", result);
-      message.put("messageId", this.messageId);
+      message.put("requestId", this.requestId);
       RedisHandler.getInstance().publish(this.resultChannel, message.toString());
    }
 

@@ -4,6 +4,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.axioma.eros.worker.ConcatWorker;
+import com.axioma.log.Logger;
+import com.axioma.redis.Constants;
 import com.axioma.redis.JSONMessageMatcher;
 import com.axioma.redis.MessageCallback;
 import com.axioma.redis.RedisHandler;
@@ -11,7 +13,7 @@ import com.axioma.redis.ThreadService;
 
 public class ErosMessageEntryPoint {
 
-   public static final String CHANNEL_ENTRY_POINT = "RequestChannel";
+   public static final String CHANNEL_ENTRY_POINT = Constants.Channels.TASK_REQUEST;
 
    public ErosMessageEntryPoint() {
       super();
@@ -28,6 +30,13 @@ public class ErosMessageEntryPoint {
    }
 
    public static void main(final String[] args) {
+      Logger log = Logger.getInstance();
+      log.init(args[0]);
+
+      Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+         log.close();
+      }));
+
       new ErosMessageEntryPoint();
    }
 
@@ -39,7 +48,8 @@ public class ErosMessageEntryPoint {
          try {
             String command = json.getString("command");
             String resultChannel = json.getString("resultChannel");
-            Runnable processor = () -> {};
+            Runnable processor = () -> {
+            };
 
             if (command.equals("concat")) {
                processor = new ConcatWorker(resultChannel, json);

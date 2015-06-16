@@ -6,6 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.axioma.eros.api.Utils;
+import com.axioma.log.Logger;
 import com.axioma.redis.RedisHandler;
 import com.google.common.collect.Lists;
 
@@ -13,13 +14,13 @@ public class ConcatWorker implements Runnable {
 
    private final String resultChannel;
    private final List<String> strToConcat;
-   private final String messageId;
+   private final String requestId;
 
    public ConcatWorker(final String resultChannel, final JSONObject json) {
       super();
       this.resultChannel = resultChannel;
       this.strToConcat = this.getStrToConcat(json);
-      this.messageId = json.getString("messageId");
+      this.requestId = json.getString("requestId");
    }
 
    private List<String> getStrToConcat(final JSONObject json) {
@@ -33,14 +34,16 @@ public class ConcatWorker implements Runnable {
 
    @Override
    public void run() {
+      Logger.getInstance().log("ConcatWorker", "start", this.requestId, "PROCESSING");
       String result = Utils.concat(this.strToConcat);
       this.sendResult(result);
+      Logger.getInstance().log("ConcatWorker", "end", this.requestId, "PROCESSING");
    }
 
    private void sendResult(final String result) {
       JSONObject message = new JSONObject();
       message.put("result", result);
-      message.put("messageId", this.messageId);
+      message.put("messageId", this.requestId);
       RedisHandler.getInstance().publish(this.resultChannel, message.toString());
    }
 
